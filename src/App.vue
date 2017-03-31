@@ -4,12 +4,10 @@
     
     <ul class="list-photos">
       <li class="list-photos-item" v-for="photo of photos">
-        <div class="panel">
-          <h2 class="panel-title">{{photo.title}}</h2>
-          <div class="panel-body">
-            <img class="img-responsive" :src="photo.url" :alt="photo.title">
-          </div><!-- fim panel-body -->
-        </div><!-- fim panel -->
+        <my-panel :title="photo.title">
+          <img class="img-responsive" :src="photo.url" :alt="photo.title">
+        </my-panel>
+
       </li>
     </ul>
     
@@ -17,16 +15,28 @@
 </template>
 
 <script>
+
+import Panel from './components/shared/panel/Panel.vue';
+
 export default {
   
+  components: {
+    'my-panel': Panel
+  },
+
   data () {
     return {
-      title: 'Alurapic',
-      photos: [{
-        title: 'Dog',
-        url: 'http://tudosobrecachorros.com.br/wp-content/uploads/cachorro-independente.jpg'
-      }]
+      titulo: 'Alurapic', 
+
+      photos: []
     }
+  },
+  created() {
+
+    this.$http
+      .get('http://localhost:3000/v1/fotos')
+      .then(res => res.json())
+      .then(photos => this.photos = photos, err => console.log(err));
   }
 }
 </script>
@@ -52,26 +62,6 @@ export default {
 
   .img-responsive {
     width: 95%;
-  }
-
-  .panel {
-    padding: 0 auto;
-    border: solid 2px grey;
-    display: inline-block;
-    margin: 5px;
-    box-shadow: 5px 5px 10px grey;
-    width: 200px;
-    height: 100%;
-    vertical-align: top;
-    text-align: center;
-  }
-
-  .panel .panel-title {
-    text-align: center;
-    background: lightblue;
-    margin: 0 0 15px 0;
-    padding: 10px;
-    text-transform: uppercase;
   }
 
 </style>
